@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { css } from 'glamor';
-import { HtmlSanitizer } from '@shopgate/engage/components';
 import config from '../../config';
 
 const styles = {
@@ -30,9 +29,10 @@ const HtmlBlock = ({ name }) => {
   const className = `${styles.container} html-block-${toCssClassName(name)}`;
 
   return (
-    <HtmlSanitizer className={className}>
-      {htmlContent}
-    </HtmlSanitizer>
+    <div
+      className={className}
+      dangerouslySetInnerHTML={{ __html: htmlContent }}
+    />
   );
 };
 
