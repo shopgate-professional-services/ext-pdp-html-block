@@ -1,0 +1,27 @@
+{
+  "name": "@shopgate-project/pdp-html-block",
+  "version": "1.0.0",
+  "description": "Inject custom HTML blocks into different portals of the product details page.",
+  "license": "Apache-2.0",
+  "scripts": {
+    "lint": "eslint --parser babel-eslint --ignore-path ../.gitignore --ignore-path .eslintignore --ext .js --ext .jsx ."
+  },
+  "devDependencies": {
+    "@shopgate/engage": "^7.30.0",
+    "@shopgate/eslint-config": "^7.30.0",
+    "@shopgate/pwa-common": "^7.30.0",
+    "@shopgate/pwa-common-commerce": "^7.30.0",
+    "@shopgate/pwa-core": "^7.30.0",
+    "@shopgate/pwa-unit-test": "^7.30.0",
+    "@shopgate/pwa-ui-ios": "^7.30.0",
+    "@shopgate/pwa-ui-shared": "^7.30.0",
+    "eslint": "^8.57.1",
+    "prop-types": "~15.8.1",
+    "react": "^17.0.2",
+    "react-redux": "^8.1.3",
+    "reselect": "^4.1.8"
+  },
+  "dependencies": {
+    "@shopgate-ps/pwa-extension-kit": "^0.7.1"
+  }
+}
