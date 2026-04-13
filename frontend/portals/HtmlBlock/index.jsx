@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { css } from 'glamor';
-import config from '../../config';
+import config from '../../config.json';
 
 const styles = {
   container: css({ padding: 16 }),
