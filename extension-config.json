@@ -1,0 +1,36 @@
+{
+  "version": "1.0.0",
+  "id": "@shopgate-project/pdp-html-block",
+  "components": [
+    {
+      "id": "HtmlBlock",
+      "type": "portals",
+      "path": "frontend/portals/HtmlBlock",
+      "target": [
+        "product.image.after",
+        "product.header.before",
+        "product.header.after",
+        "product.variant-select.before",
+        "product.variant-select.after",
+        "product.description.before",
+        "product.description.after",
+        "product.properties.before",
+        "product.properties.after",
+        "product.reviews.before",
+        "product.reviews.after"
+      ]
+    }
+  ],
+  "configuration": {
+    "htmlBlocks": {
+      "type": "admin",
+      "destination": "frontend",
+      "default": {},
+      "params": {
+        "label": "HTML blocks for different portals",
+        "type": "json"
+      }
+    }
+  },
+  "steps": []
+}
