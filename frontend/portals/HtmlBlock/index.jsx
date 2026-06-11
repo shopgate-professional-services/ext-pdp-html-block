@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { css } from 'glamor';
+import { withCurrentProduct } from '@shopgate/engage/core';
 import config from '../../config.json';
 import connect from '../../connector';
 import formatHtml from '../../helpers/formatHtml';
@@ -26,15 +27,14 @@ const getProductNumber = product => product?.identifiers?.sku;
 /**
  * Creates the variable map for configured HTML blocks.
  * @param {Object|null} product Product data.
- * @param {string|null|false} productId Product id from route.
  * @returns {Object}
  */
-const getProductVariables = (product, productId) => {
+const getProductVariables = (product) => {
   const productNumber = getProductNumber(product);
 
   return {
     productName: product?.name,
-    productId: product?.id || productId,
+    productId: product?.id,
     productNumber,
   };
 };
@@ -47,7 +47,6 @@ const getProductVariables = (product, productId) => {
 const HtmlBlock = ({
   name,
   product,
-  productId,
 }) => {
   const htmlContent = config.htmlBlocks?.[name];
 
@@ -61,7 +60,7 @@ const HtmlBlock = ({
     <div
       className={className}
       dangerouslySetInnerHTML={{
-        __html: formatHtml(htmlContent, getProductVariables(product, productId)),
+        __html: formatHtml(htmlContent, getProductVariables(product)),
       }}
     />
   );
@@ -70,15 +69,10 @@ const HtmlBlock = ({
 HtmlBlock.propTypes = {
   name: PropTypes.string.isRequired,
   product: PropTypes.shape(),
-  productId: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.bool,
-  ]),
 };
 
 HtmlBlock.defaultProps = {
   product: null,
-  productId: null,
 };
 
-export default connect(HtmlBlock);
+export default withCurrentProduct(connect(HtmlBlock));
