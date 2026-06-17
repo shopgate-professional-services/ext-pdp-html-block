@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 import { css } from 'glamor';
-import { withCurrentProduct } from '@shopgate/engage/core';
+import { useCurrentProduct } from '@shopgate/engage/core';
+import { getProduct } from '@shopgate/pwa-common-commerce/product/selectors/product';
 import config from '../../config.json';
-import connect from '../../connector';
 import formatHtml from '../../helpers/formatHtml';
 
 const styles = {
@@ -46,8 +47,9 @@ const getProductVariables = (product) => {
  */
 const HtmlBlock = ({
   name,
-  product,
 }) => {
+  const productProps = useCurrentProduct();
+  const product = useSelector(state => getProduct(state, productProps));
   const htmlContent = config.htmlBlocks?.[name];
 
   if (typeof htmlContent !== 'string' || htmlContent.trim() === '') {
@@ -68,11 +70,6 @@ const HtmlBlock = ({
 
 HtmlBlock.propTypes = {
   name: PropTypes.string.isRequired,
-  product: PropTypes.shape(),
 };
 
-HtmlBlock.defaultProps = {
-  product: null,
-};
-
-export default withCurrentProduct(connect(HtmlBlock));
+export default HtmlBlock;

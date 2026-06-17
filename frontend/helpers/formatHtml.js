@@ -1,9 +1,19 @@
 /**
- * Escapes special regular expression characters within a string.
+ * Escapes HTML special characters within a string.
  * @param {string} value Value to escape.
  * @returns {string}
  */
-const escapeRegExp = value => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const escapeHtml = (value) => {
+  const map = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;',
+  };
+
+  return value.replace(/[&<>"']/g, char => map[char]);
+};
 
 /**
  * Normalizes a value for insertion into configured HTML.
@@ -15,7 +25,7 @@ const normalizeValue = (value) => {
     return '';
   }
 
-  return `${value}`;
+  return escapeHtml(`${value}`);
 };
 
 /**
@@ -24,12 +34,15 @@ const normalizeValue = (value) => {
  * @param {Object} variables Variables for replacement.
  * @returns {string}
  */
-const formatHtml = (htmlContent, variables) => Object.keys(variables).reduce(
-  (acc, key) => acc.replace(
-    new RegExp(`{\\s*${escapeRegExp(key)}\\s*}`, 'g'),
-    normalizeValue(variables[key])
-  ),
-  htmlContent
+const formatHtml = (htmlContent, variables) => htmlContent.replace(
+  /{\s*(\w+)\s*}/g,
+  (match, key) => {
+    if (!Object.prototype.hasOwnProperty.call(variables, key)) {
+      return match;
+    }
+
+    return normalizeValue(variables[key]);
+  }
 );
 
 export default formatHtml;
