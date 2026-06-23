@@ -21,10 +21,10 @@ The following product variables can be used inside configured HTML blocks:
   "htmlBlocks": {
     "product.image.after": "<p>HTML for <b>{productName}</b></p>",
     "product.header.before": "<p>HTML for ID <b>{productId}</b></p>",
-    "product.header.after": "<script>window.reviewToolProduct = { id: '{productId}', number: '{productNumber}' };</script>",
+    "product.header.after": "<script async src=\"https://example.com/review-tool.js\"></script><div class=\"review-widget\" data-product-id=\"{productId}\" data-product-number=\"{productNumber}\"></div>",
     "product.variant-select.before": "<p>HTML for <b>variant before</b></p>",
     "product.variant-select.after": "<p>HTML for <b>variant after</b></p>",
-    "product.description.before": "<p>HTML for SKU <b>{productNumber}'</b></p>",
+    "product.description.before": "<p>HTML for SKU <b>{productNumber}</b></p>",
     "product.description.after": "<p>HTML for <b>description after</b></p>",
     "product.properties.before": "<p>HTML for <b>properties before</b></p>",
     "product.properties.after": "<p>HTML for <b>properties after</b></p>",

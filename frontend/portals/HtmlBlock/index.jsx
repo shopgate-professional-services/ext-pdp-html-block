@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { css } from 'glamor';
 import { useCurrentProduct } from '@shopgate/engage/core';
+import { HtmlSanitizer } from '@shopgate/engage/components';
 import { getProduct } from '@shopgate/pwa-common-commerce/product/selectors/product';
 import config from '../../config.json';
 import formatHtml from '../../helpers/formatHtml';
@@ -57,14 +58,19 @@ const HtmlBlock = ({
   }
 
   const className = `${styles.container} html-block-${toCssClassName(name)}`;
+  const formattedHtml = formatHtml(htmlContent, getProductVariables(product));
 
   return (
-    <div
+    <HtmlSanitizer
       className={className}
-      dangerouslySetInnerHTML={{
-        __html: formatHtml(htmlContent, getProductVariables(product)),
+      processStyles
+      settings={{
+        html: formattedHtml,
+        portal: name,
       }}
-    />
+    >
+      {formattedHtml}
+    </HtmlSanitizer>
   );
 };
 
