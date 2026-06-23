@@ -12,6 +12,8 @@ const styles = {
   container: css({ padding: 16 }),
 };
 
+const PRODUCT_VARIABLE_PATTERN = /{\s*(productName|productId|productNumber)\s*}/;
+
 /**
  * Converts a string into a CSS class name.
  * @param {*} value The string to convert.
@@ -57,6 +59,10 @@ const HtmlBlock = ({
     return null;
   }
 
+  if (PRODUCT_VARIABLE_PATTERN.test(htmlContent) && !product) {
+    return null;
+  }
+
   const className = `${styles.container} html-block-${toCssClassName(name)}`;
   const formattedHtml = formatHtml(htmlContent, getProductVariables(product));
 
@@ -65,7 +71,7 @@ const HtmlBlock = ({
       className={className}
       processStyles
       settings={{
-        html: formattedHtml,
+        extension: 'pdp-html-block',
         portal: name,
       }}
     >
