@@ -14,10 +14,32 @@ The following product variables can be used inside configured HTML blocks:
 - `{productId}`
 - `{productNumber}`
 
+After a block was rendered or updated, the extension dispatches a `pdpHtmlBlock:updated` browser event. Integrations can listen to this event to reinitialize third-party widgets after SPA product navigation.
+
+```js
+window.addEventListener('pdpHtmlBlock:updated', (event) => {
+  const {
+    name,
+    productId,
+    productName,
+    productNumber,
+  } = event.detail;
+
+  if (name !== 'product.description.after') {
+    return;
+  }
+
+  // Reinitialize the third-party widget here.
+});
+```
+
+Set `refreshOnProductChange` to `true` to remount HTML blocks whenever the PDP base product changes. This makes the configured HTML pass through the sanitizer again and executes configured scripts again. This is a best-effort refresh for third-party scripts; it does not reset vendor-internal runtime state.
+
 ### Example Configuration
 
 ```json
 {
+  "refreshOnProductChange": true,
   "htmlBlocks": {
     "product.image.after": "<p>HTML for <b>{productName}</b></p>",
     "product.header.before": "<p>HTML for ID <b>{productId}</b></p>",

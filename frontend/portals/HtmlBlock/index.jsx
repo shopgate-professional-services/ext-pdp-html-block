@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { css } from 'glamor';
 import { useCurrentProduct } from '@shopgate/engage/core';
 import { HtmlSanitizer } from '@shopgate/engage/components';
-import { getProduct } from '@shopgate/pwa-common-commerce/product/selectors/product';
+import { getBaseProduct } from '@shopgate/engage/product/selectors/product';
 import config from '../../config.json';
 import formatHtml from '../../helpers/formatHtml';
 
@@ -13,6 +13,7 @@ const styles = {
 };
 
 const PRODUCT_VARIABLE_PATTERN = /{\s*(productName|productId|productNumber)\s*}/;
+const HTML_BLOCK_UPDATED_EVENT = 'pdpHtmlBlock:updated';
 
 /**
  * Converts a string into a CSS class name.
@@ -52,22 +53,65 @@ const HtmlBlock = ({
   name,
 }) => {
   const productProps = useCurrentProduct();
-  const product = useSelector(state => getProduct(state, productProps));
+  const product = useSelector(state => getBaseProduct(state, productProps));
   const htmlContent = config.htmlBlocks?.[name];
+  const refreshOnProductChange = config.refreshOnProductChange === true;
+  const productVariables = useMemo(() => getProductVariables(product), [product]);
+  const formattedHtml = useMemo(() => {
+    if (typeof htmlContent !== 'string') {
+      return '';
+    }
+
+    return formatHtml(htmlContent, productVariables);
+  }, [htmlContent, productVariables]);
+  const hasProductVariables = typeof htmlContent === 'string' &&
+    PRODUCT_VARIABLE_PATTERN.test(htmlContent);
+  const shouldWaitForProduct = (hasProductVariables || refreshOnProductChange) && !product;
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || typeof window.CustomEvent !== 'function') {
+      return;
+    }
+
+    if (typeof htmlContent !== 'string' || htmlContent.trim() === '') {
+      return;
+    }
+
+    if (shouldWaitForProduct) {
+      return;
+    }
+
+    window.dispatchEvent(new CustomEvent(HTML_BLOCK_UPDATED_EVENT, {
+      detail: {
+        name,
+        html: formattedHtml,
+        ...productVariables,
+      },
+    }));
+  }, [
+    formattedHtml,
+    hasProductVariables,
+    htmlContent,
+    name,
+    product,
+    productVariables,
+    shouldWaitForProduct,
+  ]);
 
   if (typeof htmlContent !== 'string' || htmlContent.trim() === '') {
     return null;
   }
 
-  if (PRODUCT_VARIABLE_PATTERN.test(htmlContent) && !product) {
+  if (shouldWaitForProduct) {
     return null;
   }
 
   const className = `${styles.container} html-block-${toCssClassName(name)}`;
-  const formattedHtml = formatHtml(htmlContent, getProductVariables(product));
+  const sanitizerKey = refreshOnProductChange ? `${name}-${product.id}` : name;
 
   return (
     <HtmlSanitizer
+      key={sanitizerKey}
       className={className}
       processStyles
       settings={{
