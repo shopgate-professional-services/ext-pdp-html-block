@@ -33,13 +33,12 @@ window.addEventListener('pdpHtmlBlock:updated', (event) => {
 });
 ```
 
-Set `refreshOnProductChange` to `true` to remount HTML blocks whenever the PDP base product changes. This makes the configured HTML pass through the sanitizer again and executes configured scripts again. This is a best-effort refresh for third-party scripts; it does not reset vendor-internal runtime state.
+HTML blocks may be processed again during PDP lifecycle updates, for example after SPA product navigation. Third-party integrations should use the `pdpHtmlBlock:updated` event as their stable hook instead of relying on inline scripts to execute exactly once.
 
 ### Example Configuration
 
 ```json
 {
-  "refreshOnProductChange": true,
   "htmlBlocks": {
     "product.image.after": "<p>HTML for <b>{productName}</b></p>",
     "product.header.before": "<p>HTML for ID <b>{productId}</b></p>",

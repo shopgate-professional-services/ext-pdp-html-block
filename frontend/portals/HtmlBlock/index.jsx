@@ -55,7 +55,6 @@ const HtmlBlock = ({
   const productProps = useCurrentProduct();
   const product = useSelector(state => getBaseProduct(state, productProps));
   const htmlContent = config.htmlBlocks?.[name];
-  const refreshOnProductChange = config.refreshOnProductChange === true;
   const productVariables = useMemo(() => getProductVariables(product), [product]);
   const formattedHtml = useMemo(() => {
     if (typeof htmlContent !== 'string') {
@@ -66,7 +65,7 @@ const HtmlBlock = ({
   }, [htmlContent, productVariables]);
   const hasProductVariables = typeof htmlContent === 'string' &&
     PRODUCT_VARIABLE_PATTERN.test(htmlContent);
-  const shouldWaitForProduct = (hasProductVariables || refreshOnProductChange) && !product;
+  const shouldWaitForProduct = hasProductVariables && !product;
 
   useEffect(() => {
     if (typeof window === 'undefined' || typeof window.CustomEvent !== 'function') {
@@ -107,11 +106,10 @@ const HtmlBlock = ({
   }
 
   const className = `${styles.container} html-block-${toCssClassName(name)}`;
-  const sanitizerKey = refreshOnProductChange ? `${name}-${product.id}` : name;
 
   return (
     <HtmlSanitizer
-      key={sanitizerKey}
+      key={name}
       className={className}
       processStyles
       settings={{

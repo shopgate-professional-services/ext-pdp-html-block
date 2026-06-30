@@ -30,15 +30,6 @@
         "label": "HTML blocks for different portals",
         "type": "json"
       }
-    },
-    "refreshOnProductChange": {
-      "type": "admin",
-      "destination": "frontend",
-      "default": false,
-      "params": {
-        "label": "Refresh HTML blocks on product changes",
-        "type": "switch"
-      }
     }
   },
   "steps": []
