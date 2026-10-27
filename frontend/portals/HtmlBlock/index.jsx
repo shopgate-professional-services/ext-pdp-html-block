@@ -111,6 +111,7 @@ const HtmlBlock = ({
     <HtmlSanitizer
       key={name}
       className={className}
+      allowScripts
       processStyles
       settings={{
         extension: 'pdp-html-block',
