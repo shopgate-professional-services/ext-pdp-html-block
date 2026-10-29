@@ -1,16 +1,18 @@
 import React, { useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { css } from 'glamor';
 import { useCurrentProduct } from '@shopgate/engage/core';
 import { HtmlSanitizer } from '@shopgate/engage/components';
 import { getBaseProduct } from '@shopgate/engage/product/selectors/product';
+import { makeStyles } from '@shopgate/engage/styles';
 import config from '../../config.json';
 import formatHtml from '../../helpers/formatHtml';
 
-const styles = {
-  container: css({ padding: 16 }),
-};
+const useStyles = makeStyles()(theme => ({
+  container: {
+    padding: theme.spacing(2),
+  },
+}));
 
 const PRODUCT_VARIABLE_PATTERN = /{\s*(productName|productId|productNumber)\s*}/;
 const HTML_BLOCK_UPDATED_EVENT = 'pdpHtmlBlock:updated';
@@ -52,6 +54,7 @@ const getProductVariables = (product) => {
 const HtmlBlock = ({
   name,
 }) => {
+  const { classes, cx } = useStyles();
   const productProps = useCurrentProduct();
   const product = useSelector(state => getBaseProduct(state, productProps));
   const htmlContent = config.htmlBlocks?.[name];
@@ -105,12 +108,11 @@ const HtmlBlock = ({
     return null;
   }
 
-  const className = `${styles.container} html-block-${toCssClassName(name)}`;
-
   return (
     <HtmlSanitizer
       key={name}
-      className={className}
+      className={cx(classes.container, `html-block-${toCssClassName(name)}`)}
+      allowScripts
       processStyles
       settings={{
         extension: 'pdp-html-block',
