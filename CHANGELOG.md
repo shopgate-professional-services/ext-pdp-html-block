@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [1.1.1] 2026-10-27
+### Changed
+- Adopted the new theme: the HTML block padding comes from the theme spacing. Requires PWA 7.29.0 or newer, which `@shopgate/engage` declares as a peer dependency.
+
+### Removed
+- Removed glamor and the single `@shopgate/pwa-*` libraries.
+
 ### Fixed
 - Scripts in configured HTML blocks keep running with PWA 7.34.0 and later, which only runs scripts in `HtmlSanitizer` with `allowScripts`.
 
